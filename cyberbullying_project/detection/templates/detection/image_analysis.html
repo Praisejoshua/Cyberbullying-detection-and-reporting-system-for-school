@@ -1,0 +1,89 @@
+{% extends 'detection/base.html' %}
+
+{% block content %}
+<div class="main-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="text-center mb-4">📱 WhatsApp Screenshot Analysis</h2>
+            <p class="text-muted text-center mb-4">
+                Upload a screenshot of a chat conversation to analyze for cyberbullying.
+            </p>
+            
+            <form method="post" enctype="multipart/form-data" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="image" class="form-label">Select Screenshot Image</label>
+                    <input 
+                        class="form-control form-control-lg" 
+                        type="file" 
+                        id="image" 
+                        name="image" 
+                        accept="image/*"
+                        required
+                    >
+                    <div class="form-text">Supported formats: PNG, JPG, JPEG</div>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg btn-custom">
+                        📸 Analyze Screenshot
+                    </button>
+                </div>
+            </form>
+            
+            {% if result %}
+                {% if result.error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ result.error }}
+                    </div>
+                {% else %}
+                    <!-- Results -->
+                    <div class="card mb-4 {% if result.risk_level == 'HIGH' %}border-danger{% elif result.risk_level == 'MODERATE' %}border-warning{% else %}border-success{% endif %}">
+                        <div class="card-header text-white {% if result.risk_level == 'HIGH' %}bg-danger{% elif result.risk_level == 'MODERATE' %}bg-warning{% else %}bg-success{% endif %}">
+                            <h4 class="mb-0">{{ result.status }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% if result.image_url %}
+                                    <img src="{{ result.image_url }}" class="img-fluid rounded" alt="Uploaded screenshot">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Analysis Results</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Total Messages:</strong> {{ result.total_messages }}</li>
+                                        <li><strong>Bullying Messages:</strong> {{ result.bullying_count }}</li>
+                                        <li><strong>Bullying Ratio:</strong> {{ result.bullying_ratio }}%</li>
+                                        <li><strong>Average Score:</strong> {{ result.avg_score }}%</li>
+                                        <li><strong>Risk Level:</strong> {{ result.risk_level }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            {% if result.flagged_messages %}
+                            <hr>
+                            <h5 class="text-danger">🚩 Flagged Messages</h5>
+                            {% for msg in result.flagged_messages %}
+                            <div class="message-bubble">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-danger fw-bold">{{ msg.probability }}% bullying</span>
+                                </div>
+                                <p class="mb-0 mt-2">{{ msg.text }}</p>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            
+                            {% if result.extracted_text %}
+                            <hr>
+                            <h5>📝 Extracted Text (Preview)</h5>
+                            <pre class="bg-light p-3 rounded"><code>{{ result.extracted_text }}</code></pre>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

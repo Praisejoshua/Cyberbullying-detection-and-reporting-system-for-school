@@ -1,0 +1,58 @@
+{% extends 'detection/base.html' %}
+
+{% block content %}
+<div class="main-container text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold mb-4">🛡️ Cyberbullying Detection System</h1>
+            <p class="lead text-muted mb-5">
+                Protect your school community with AI-powered cyberbullying detection. 
+                Analyze text comments or WhatsApp screenshots instantly.
+            </p>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-5">
+                            <div class="display-1 mb-3">📝</div>
+                            <h3 class="card-title">Text Analysis</h3>
+                            <p class="card-text text-muted">
+                                Paste a single comment or message to check for cyberbullying content.
+                            </p>
+                            <a href="{% url 'analyze_text' %}" class="btn btn-primary btn-custom mt-3">
+                                Analyze Text
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-5">
+                            <div class="display-1 mb-3">📱</div>
+                            <h3 class="card-title">Image Analysis</h3>
+                            <p class="card-text text-muted">
+                                Upload WhatsApp screenshots or chat images to detect bullying conversations.
+                            </p>
+                            <a href="{% url 'analyze_image' %}" class="btn btn-success btn-custom mt-3">
+                                Analyze Image
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-5 p-4 bg-light rounded-3">
+                <h5 class="fw-bold mb-3">🚀 Powered By</h5>
+                <div class="row">
+                    <div class="col">
+                        <span class="badge bg-primary me-2">Machine Learning</span>
+                        <span class="badge bg-success me-2">OCR Technology</span>
+                        <span class="badge bg-info">Real-time Analysis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
